@@ -2,7 +2,7 @@ library (ggplot2)
 ## Loading and preprocessing the data
 getwd()
 
-##sourcedata <- read.csv(file="activity.csv", sep=",", header=TRUE)
+sourcedata <- read.csv(file="activity.csv", sep=",", header=TRUE)
 
 sourcedata$steps <- as.numeric(sourcedata$steps)
 sourcedata$date <- as.Date(sourcedata$date)
@@ -58,4 +58,28 @@ hist(meanStepDataNA$steps, main="Total Steps Taken per Day where we replaced all
 
 mean(meanStepDataNA$steps)
 median(meanStepDataNA$steps)
-summary(meanStepDataNA$steps, na.rm=TRUE, digits = 10)
+summary(meanStepDataNA$steps, na.rm=TRUE, digits=10)
+
+## Are there differences in activity patterns between weekdays and weekends?
+## 1. Create a new factor variable in the dataset with two levels ??? ???weekday??? 
+## and ???weekend??? indicating whether a given date is a weekday or weekend day.
+
+sourcedataNAmean$weekday <- factor(weekdays(sourcedataNAmean$date)=="Sunday" | 
+                            weekdays(sourcedataNAmean$date)=="Saturday", 
+                            labels=c("weekday", "weekend"))
+
+## 2. Make a panel plot containing a time series plot (i.e. type = "l") of 
+## the 5-minute interval (x-axis) and the average number of steps taken, 
+## averaged across all weekday days or weekend days (y-axis). 
+library(ggplot2) 
+
+avgStepsPerWeekDay <- aggregate(steps ~ interval + weekday, data = sourcedataNAmean, 
+                                FUN = mean)
+
+g <- ggplot (data=avgStepsPerWeekDay, aes (interval, steps)) +
+  geom_line(color = "BLUE", size = 1) + facet_wrap(~weekday, ncol = 1)+
+  theme_bw() +
+  theme(strip.background = element_rect(fill = "beige")) +
+  ggtitle ("The average number of steps taken in 5-minutes interval across all days \n for weekday and weekend\n")
+
+print (g)
