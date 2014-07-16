@@ -118,7 +118,7 @@ summary(sourcedataNAmean)
 
 Then we make plot to compare activity during weekday and weekend separatedly.
 ```{r ggplot}
-library(ggplot2) 
+library(avgStepsPerWeekDay) 
 
 avgStepsPerWeekDay <- aggregate(steps ~ interval + weekday, data = sourcedataNAmean, 
                                 FUN = mean)
